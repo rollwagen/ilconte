@@ -1,15 +1,18 @@
-project_name: bods
+project_name: ilconte
 version: 2
 
 builds:
-      goos:
-            - darwin
-      goarch:
-            - amd64
-            - arm64
-      binary: conte
-      ldflags:
-            - -s -w -X main.build={{.Version}}
+  - env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    binary: conte
+    ldflags:
+      - -s -w -X main.build={{.Version}}
+
 
 brews:
   -
@@ -18,22 +21,22 @@ brews:
       name: homebrew-tap
     license: MIT
     install: |-
-      bin.install "conte"
+      bin.install "bods"
 
 checksum:
-      name_template: checksums.txt
+  name_template: checksums.txt
 
 archives:
-      - files:
-              - README.md
-              - LICENSE
+  - files:
+      - README.md
+      - LICENSE
 
 snapshot:
-      name_template: "{{ incpatch .Version }}-next"
+  name_template: "{{ incpatch .Version }}-next"
 
 changelog:
-      sort: asc
-      filters:
-            exclude:
-                  - "^docs:"
-                  - "^test:"
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
