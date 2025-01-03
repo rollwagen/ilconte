@@ -21,7 +21,7 @@ brews:
       name: homebrew-tap
     license: MIT
     install: |-
-      bin.install "ilconte"
+      bin.install "conte"
 
 checksum:
   name_template: checksums.txt
