@@ -1,0 +1,39 @@
+project_name: bods
+version: 2
+
+builds:
+      goos:
+            - darwin
+      goarch:
+            - amd64
+            - arm64
+      binary: conte
+      ldflags:
+            - -s -w -X main.build={{.Version}}
+
+brews:
+  -
+    repository:
+      owner: rollwagen
+      name: homebrew-tap
+    license: MIT
+    install: |-
+      bin.install "conte"
+
+checksum:
+      name_template: checksums.txt
+
+archives:
+      - files:
+              - README.md
+              - LICENSE
+
+snapshot:
+      name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+      sort: asc
+      filters:
+            exclude:
+                  - "^docs:"
+                  - "^test:"
