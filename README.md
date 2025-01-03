@@ -3,7 +3,7 @@
 
 [![GitHub Release](https://img.shields.io/github/release/rollwagen/ilconte.svg)](https://github.com/rollwagen/ilconte/releases)
 ![Downloads](https://img.shields.io/github/downloads/rollwagen/ilconte/total)
-[![Go Reference](https://pkg.go.dev/badge/github.com/rollwagen/ilconte.svg)](https://pkg.go.dev/github.com/rollwagen/bods)
+[![Go Reference](https://pkg.go.dev/badge/github.com/rollwagen/ilconte.svg)](https://pkg.go.dev/github.com/rollwagen/ilconte)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rollwagen/ilconte)](https://goreportcard.com/report/github.com/rollwagen/ilconte)
 ![CodeQL](https://github.com/rollwagen/ilconte/workflows/CodeQL/badge.svg)
 [![Powered By: GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg?style=flat-square)](https://github.com/goreleaser)
