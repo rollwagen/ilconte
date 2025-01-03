@@ -9,7 +9,7 @@
 [![Powered By: GoReleaser](https://img.shields.io/badge/powered%20by-goreleaser-green.svg?style=flat-square)](https://github.com/goreleaser)
 
 <div align="center">
-<img src="https://github.com/user-attachments/assets/d1f35576-2a13-4331-8df5-936cc6457a97"/>
+<img src="https://github.com/user-attachments/assets/07b3bb09-659e-4711-ab18-9ece970646a7"/>
 </div>
 
 
