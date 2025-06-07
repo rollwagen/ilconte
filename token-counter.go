@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -18,6 +19,10 @@ const (
 	apiURL     = "https://api.anthropic.com/v1/messages/count_tokens"
 	apiVersion = "2023-06-01"
 	apiTimeout = 10 // seconds
+	
+	// ANSI color codes
+	lightBlue = "\033[94m"
+	reset     = "\033[0m"
 )
 
 type TokenRequest struct {
@@ -43,8 +48,21 @@ type APIError struct {
 func main() {
 	// Parse command line flags
 	model := flag.String("model", "claude-3-sonnet-20240229", "Model to use for token counting")
-	verbose := flag.Bool("verbose", false, "Show detailed output")
+	help := flag.Bool("help", false, "Show help information")
+	flag.BoolVar(help, "h", false, "Show help information")
 	flag.Parse()
+
+	// Check for help flag
+	if *help {
+		showHelp()
+		return
+	}
+
+	// Check for list-models command
+	if flag.NArg() > 0 && flag.Arg(0) == "list-models" {
+		listModels()
+		return
+	}
 
 	// Get API key from environment
 	apiKey := os.Getenv("ANTHROPIC_API_KEY")
@@ -80,11 +98,8 @@ func main() {
 	}
 
 	// Output results
-	if *verbose {
-		fmt.Printf("Model: %s\n", *model)
-		fmt.Printf("Input length: %d characters\n", len(text))
-	}
-	fmt.Printf("Token count: %d\n", count)
+	formattedCount := formatNumber(count)
+	fmt.Printf("%s[i]%s Token count: %s, Model info: %s\n", lightBlue, reset, formattedCount, *model)
 }
 
 func readStdin() (string, error) {
@@ -184,4 +199,67 @@ func countTokens(text string, apiKey, model string) (int, error) {
 	}
 
 	return tokenResp.InputTokens, nil
+}
+
+func formatNumber(n int) string {
+	str := strconv.Itoa(n)
+	if len(str) <= 3 {
+		return str
+	}
+	
+	var result strings.Builder
+	for i, digit := range str {
+		if i > 0 && (len(str)-i)%3 == 0 {
+			result.WriteRune(',')
+		}
+		result.WriteRune(digit)
+	}
+	return result.String()
+}
+
+func showHelp() {
+	fmt.Printf("Token Counter - Count tokens for Claude models\n\n")
+	fmt.Printf("USAGE:\n")
+	fmt.Printf("  conte [OPTIONS] [files...]\n")
+	fmt.Printf("  echo \"text\" | conte [OPTIONS]\n")
+	fmt.Printf("  conte list-models\n\n")
+	fmt.Printf("OPTIONS:\n")
+	fmt.Printf("  -model string\n")
+	fmt.Printf("        Model to use for token counting (default \"claude-3-sonnet-20240229\")\n")
+	fmt.Printf("  -h, -help\n")
+	fmt.Printf("        Show this help information\n\n")
+	fmt.Printf("COMMANDS:\n")
+	fmt.Printf("  list-models   List all available Claude models for token counting\n\n")
+	fmt.Printf("EXAMPLES:\n")
+	fmt.Printf("  echo \"Hello world\" | conte\n")
+	fmt.Printf("  conte file.txt\n")
+	fmt.Printf("  conte --model claude-opus-4-20250514 file.txt\n")
+	fmt.Printf("  conte list-models\n\n")
+	fmt.Printf("ENVIRONMENT:\n")
+	fmt.Printf("  ANTHROPIC_API_KEY   Required API key for Anthropic Claude\n")
+}
+
+func listModels() {
+	fmt.Printf("%s[i]%s Available Claude models for token counting:\n\n", lightBlue, reset)
+	
+	models := []struct {
+		name        string
+		description string
+	}{
+		{"claude-opus-4-20250514", "Most capable model for complex reasoning tasks"},
+		{"claude-sonnet-4-20250514", "High-performance model with exceptional reasoning"},
+		{"claude-3-5-sonnet-20241022", "Best combination of performance and speed"},
+		{"claude-3-5-sonnet-20240620", "Previous version of Claude 3.5 Sonnet"},
+		{"claude-3-5-haiku-20241022", "Fastest model for quick responses"},
+		{"claude-3-opus-20240229", "Most powerful Claude 3 model"},
+		{"claude-3-sonnet-20240229", "Balanced Claude 3 model (default)"},
+		{"claude-3-haiku-20240307", "Fastest Claude 3 model"},
+	}
+	
+	for _, model := range models {
+		fmt.Printf("  %-30s %s\n", model.name, model.description)
+	}
+	
+	fmt.Printf("\nUsage: conte --model <model-name>\n")
+	fmt.Printf("Example: conte --model claude-opus-4-20250514\n")
 }
